@@ -10,21 +10,21 @@ public class Client_First {
 			// TODO Auto-generated method stub
 		 // client_id = "ID1";
 			Client1 cl = new Client1();
-			if(args[0] .equals("1"))
+			//if(args[0] .equals("1"))
 			{
-				String endpt = "urn:esn:"+args[1];
+				String endpt = "urn:esn:"+"Clyyy772hj";
 				cl.client_init_bootstrap(endpt, "INTLS1", "INTEL");
-				Thread.sleep(2000);
+			/*	Thread.sleep(2000);
 				cl.register(endpt);
 				Thread.sleep(5000);
 				System.out.println("Update lifetime to 74566");
 				cl.register_update(endpt, "74566");
 				Thread.sleep(5000);
-				cl.deregister(endpt);
+				cl.deregister(endpt);*/
 			}
-			else if(args[0].equals("2")){
+		//	else if(args[0].equals("2")){
 			//	cl.b
-			}
+		//	}
 		}
 
 	}

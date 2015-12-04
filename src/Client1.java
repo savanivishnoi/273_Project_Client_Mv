@@ -1,4 +1,5 @@
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
@@ -64,13 +65,15 @@ public class Client1 {
 		MongoClient mongo1;
 		try {
 		//	System.out.println("client_id");
-			String obj_json = "{\"client_name\":\""+client_name+"\",\"manufacturer_id\":\""+manufacturer_id+"\"}";
+			String obj_json = "{\"client_name\":\""+client_name+"\",\"manufacturer_id\":\""+manufacturer_id+"\"}"; 
 			mongo1 = new MongoClient("localhost", 27017);
 			DB db = mongo1.getDB("database_name");
 			DBCollection table = db.getCollection("273_Client_Bootstrap");
 			BasicDBObject document = new BasicDBObject();
 			Client cl1 = ClientBuilder.newClient();
-			WebTarget tar1 = cl1.target("http://localhost:8080/273_Assgn_1_Server/api/Bootstrap");
+			WebTarget tar1 = cl1.target("http://localhost:8080/273_Proj_Server/boot/Bootstrap");
+			System.out.println("In client 1 75");
+			String abc = JSON.serialize(obj_json);
 			Response response = tar1.request(MediaType.APPLICATION_JSON_TYPE).post(Entity.json(obj_json));
 			ObjectMapper objMap = new ObjectMapper();
 			objMap.setVisibility(PropertyAccessor.ALL, Visibility.ANY);
@@ -99,7 +102,7 @@ public class Client1 {
 		}
 	}
 
-public void register(String client_id) throws UnknownHostException{
+public void register(String client_id) throws InterruptedException, IOException{
 	String reg_input;
 	String objects = dev1.objInstances();
 	
@@ -111,17 +114,18 @@ public void register(String client_id) throws UnknownHostException{
 	reg_input = reg_input+","+Jsonstr("objects",objects);
 	reg_input = reg_input+"}";
 	Client cl1 = ClientBuilder.newClient();
-	WebTarget tar1 = cl1.target("http://localhost:8080/273_Assgn_1_Server/api/register");
+	WebTarget tar1 = cl1.target("http://localhost:8080/273_Proj_Server/boot/register");
 	Response response = tar1.request(MediaType.APPLICATION_JSON_TYPE).
 		 			    		post(Entity.json(reg_input));
 	System.out.println("Input to the Server:"+reg_input);
 	System.out.println("Registered-"+response.readEntity(String.class));
+	Create_Event_Handle.main(null);
  	
 }
 public void register_update(String client_id, String update_str){
 	String upd_str = "{"+Jsonstr("client_id", client_id)+","+Jsonstr("lifetime", update_str)+"}";
 	Client cl1 = ClientBuilder.newClient();
-	WebTarget tar1 = cl1.target("http://localhost:8080/273_Assgn_1_Server/api/update_reg");
+	WebTarget tar1 = cl1.target("http://localhost:8080/273_Proj_Server/boot/update_reg");
 	Response response = tar1.request(MediaType.APPLICATION_JSON_TYPE).
 	    		put(Entity.json(upd_str));
 	System.out.println("Input to the Server:"+upd_str);
@@ -132,7 +136,7 @@ public void register_update(String client_id, String update_str){
 public void deregister(String client_id){
 	
 	Client cl1 = ClientBuilder.newClient();
-	WebTarget tar1 = cl1.target("http://localhost:8080/273_Assgn_1_Server/api/deregister");
+	WebTarget tar1 = cl1.target("http://localhost:8080/273_Proj_Server/boot/deregister");
 	Response response = tar1.request(MediaType.APPLICATION_JSON_TYPE).
     		put(Entity.json("{"+Jsonstr("_id", client_id)+"}"));
 	System.out.println("Input to the Server:"+"{"+Jsonstr("_id", client_id)+"}");

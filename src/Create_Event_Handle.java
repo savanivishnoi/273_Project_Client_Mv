@@ -1,4 +1,6 @@
 import java.io.IOException;
+import java.util.Random;
+import java.util.concurrent.Future;
 
 import javax.ws.rs.*;
 
@@ -119,7 +121,11 @@ public class Create_Event_Handle {
 			    		handle_discover(input);
 			    		//write_attributes_process(input);
 					
-					} else if(inboundEvent.getName().equals("empty")){
+					} else if(inboundEvent.getName().equals("readx")){
+						String input = inboundEvent.readData(String.class);
+						readx_call(input);
+					}
+					else if(inboundEvent.getName().equals("empty")){
 						break;
 					}
 				} else {
@@ -137,22 +143,32 @@ public class Create_Event_Handle {
 	}
 	
 	static void read_Call(String input){
-		input = input + ", 1000";
+		input = input + "," + randomGen();;
 		Client cl1 = ClientBuilder.newClient();
 		WebTarget tar1 = cl1.target("http://localhost:8080/273_Proj_Server/api/events/read");
 		tar1.request(MediaType.TEXT_PLAIN).put(Entity.text(input));
 	}
+	static void readx_call(String input){
+		System.out.println("inside readx_call");
+		input = input + ","+ randomGen();
+		Client cl1 = ClientBuilder.newClient();
+		WebTarget tar1 = cl1.target("http://localhost:8080/273_Proj_Server/api/events/readx");
+		tar1.request(MediaType.TEXT_PLAIN).put(Entity.text(input));
+	}
+	
 	static int device_get_current_pressure(){
 		int press;
-		press = 5;
+		press = 120;
 		return press;
 	}
 	static void send_notify(int pressure_status, int press_current){
 		//System.out.println("notify");
 		String input =  _id + "," + client_id + "," + object_id+"," +press_current+ ","+ pressure_status;
 		Client cl1 = ClientBuilder.newClient();
-		WebTarget tar1 = cl1.target("http://localhost:8080/273_Proj_Server/api/events/notify");
-		tar1.request(MediaType.TEXT_PLAIN).put(Entity.text(input));
+		final AsyncInvoker asyncInvoker = cl1.target("http://localhost:8080/273_Proj_Server/api/events/notify").request(MediaType.TEXT_PLAIN).async();
+		final Future<Response> responseFuture = asyncInvoker.put(Entity.text(input));
+		//WebTarget tar1 = cl1.target("http://localhost:8080/273_Proj_Server/api/events/notify");
+		//tar1.request(MediaType.TEXT_PLAIN).put(Entity.text(input));
 	}
 	static void write_attributes_process(String input){
 		String[] arr_input;
@@ -197,5 +213,13 @@ public class Create_Event_Handle {
 		Client cl1 = ClientBuilder.newClient();
 		WebTarget tar1 = cl1.target("http://localhost:8080/273_Proj_Server/api/events/discover");
 		Response response = tar1.request(MediaType.TEXT_PLAIN).put(Entity.text(json_op));
+	}
+	static int randomGen(){
+		Random lo_random = new Random();
+		int start = 100;
+		int end = 1000;
+		return ( lo_random.nextInt(700) + start);
+		
+		
 	}
 }
