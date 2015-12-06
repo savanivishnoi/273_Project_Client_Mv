@@ -12,7 +12,7 @@ public class Client_First {
 			Client1 cl = new Client1();
 			//if(args[0] .equals("1"))
 			{
-				String endpt = "urn:esn:"+"Clyyy772hj";
+				String endpt = "urn:esn:"+"Client3";
 				cl.client_init_bootstrap(endpt, "INTLS1", "INTEL");
 			/*	Thread.sleep(2000);
 				cl.register(endpt);

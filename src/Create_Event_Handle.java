@@ -203,7 +203,8 @@ public class Create_Event_Handle {
 		 BasicDBObject fld = new BasicDBObject();
 		   
 		 dbo.put("_id", input);
-		 fld.put("object", 1);
+		 fld.put("objects", 1);
+		 fld.put("_id", 0);
 		 DBObject cursor1 = collection.findOne(dbo,fld);
 		 System.out.println(input+"input of dicsover");
 
